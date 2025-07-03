@@ -10,6 +10,7 @@ const name = "Name ";
 const nameHint = "Enter Your Name";
 const forgetpass = " Forgot Password";
 const login = "Log in";
+const logout = "Log out";
 const signup = "Sign up";
 const createNewAccount = "or, Create a new account";
 const loginwith = "Log in with";
