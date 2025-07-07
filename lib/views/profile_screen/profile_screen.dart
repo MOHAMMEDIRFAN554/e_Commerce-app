@@ -14,10 +14,16 @@ class ProfileScreen extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: Column(
               children: [
+                // edit profile
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.edit, color: whiteColor),
+                ),
+                //user details
                 Row(
                   children: [
                     Image.asset(
-                      imgProfile,
+                      imgProfile2,
                       width: 100,
                       fit: BoxFit.cover,
                     ).box.roundedFull.clip(Clip.antiAlias).make(),
@@ -32,6 +38,12 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: whiteColor),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
                       onPressed: () {},
                       child: logout.text.fontFamily(semibold).white.make(),
                     ),
