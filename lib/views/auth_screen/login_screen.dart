@@ -1,5 +1,6 @@
 import 'package:e_app/consts/consts.dart';
 import 'package:e_app/consts/lists.dart';
+import 'package:e_app/controller/auth_controller.dart';
 import 'package:e_app/views/auth_screen/sinup_screen.dart';
 import 'package:e_app/views/home_screen/home.dart';
 // import 'package:e_app/consts/strings.dart';
@@ -18,6 +19,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controller = Get.put(AuthController());
     return bgWidget(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -31,8 +33,18 @@ class LoginScreen extends StatelessWidget {
               10.heightBox,
               Column(
                     children: [
-                      customTextField(hint: emailHint, title: email),
-                      customTextField(hint: passwordHint, title: password),
+                      customTextField(
+                        hint: emailHint,
+                        title: email,
+                        isPass: false,
+                        controller: controller.emailController,
+                      ),
+                      customTextField(
+                        hint: passwordHint,
+                        title: password,
+                        isPass: true,
+                        controller: controller.passwordController,
+                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
@@ -46,8 +58,17 @@ class LoginScreen extends StatelessWidget {
                         color: redColor,
                         title: login,
                         textColor: textfieldGrey,
-                        onPress: () {
-                          Get.to(() => Home());
+                        onPress: () async {
+                          await controller.loginMethod(context: context).then((
+                            value,
+                          ) {
+                            if (value != null) {
+                              VxToast.show(context, msg: loginSuccess);
+                              Get.offAll(() => Home());
+                            } else {
+                              VxToast.show(context, msg: loginError);
+                            }
+                          });
                         },
                       ).box.width(context.screenWidth - 50).make(),
                       5.heightBox,

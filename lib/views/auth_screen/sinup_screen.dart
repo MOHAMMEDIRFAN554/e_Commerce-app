@@ -1,5 +1,7 @@
 import 'package:e_app/consts/consts.dart';
+import 'package:e_app/controller/auth_controller.dart';
 import 'package:e_app/views/auth_screen/login_screen.dart';
+import 'package:e_app/views/home_screen/home.dart';
 import 'package:e_app/widegts/applogo.dart';
 import 'package:e_app/widegts/bg.dart';
 import 'package:e_app/widegts/button.dart';
@@ -16,6 +18,14 @@ class SinupScreen extends StatefulWidget {
 
 class _SinupScreenState extends State<SinupScreen> {
   bool? isCheck = false;
+  var controller = Get.put(AuthController());
+
+  //text controller
+  var nameController = TextEditingController();
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var rePassController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return bgWidget(
@@ -31,11 +41,31 @@ class _SinupScreenState extends State<SinupScreen> {
               10.heightBox,
               Column(
                     children: [
-                      customTextField(hint: nameHint, title: name),
-                      customTextField(hint: emailHint, title: email),
+                      customTextField(
+                        hint: nameHint,
+                        title: name,
+                        controller: nameController,
+                        isPass: false,
+                      ),
+                      customTextField(
+                        hint: emailHint,
+                        title: email,
+                        controller: emailController,
+                        isPass: false,
+                      ),
 
-                      customTextField(hint: passwordHint, title: password),
-                      customTextField(hint: rePassHint, title: rePass),
+                      customTextField(
+                        hint: passwordHint,
+                        title: password,
+                        controller: passwordController,
+                        isPass: true,
+                      ),
+                      customTextField(
+                        hint: rePassHint,
+                        title: rePass,
+                        controller: rePassController,
+                        isPass: true,
+                      ),
 
                       Align(
                         alignment: Alignment.centerRight,
@@ -102,7 +132,33 @@ class _SinupScreenState extends State<SinupScreen> {
                         color: isCheck == true ? redColor : lightGrey,
                         title: signup,
                         textColor: textfieldGrey,
-                        onPress: () {},
+                        onPress: () async {
+                          if (isCheck != false) {
+                            try {
+                              await controller
+                                  .signupMethod(
+                                    context: context,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  )
+                                  .then((value) {
+                                    return controller.storeUserData(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                    );
+                                  })
+                                  .then((value) {
+                                    VxToast.show(context, msg: loginSuccess);
+                                    Get.offAll(() => Home());
+                                  });
+                            } catch (e) {
+                              auth.signOut();
+                              // VxToast.show(context, msg: loginError);
+                              VxToast.show(context, msg: e.toString());
+                            }
+                          }
+                        },
                       ).box.width(context.screenWidth - 50).make(),
                       10.heightBox,
                       Row(
