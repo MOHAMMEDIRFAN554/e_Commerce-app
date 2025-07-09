@@ -6,7 +6,6 @@ Widget pressButton({onPress, color, textColor, String? title}) {
     style: ElevatedButton.styleFrom(
       backgroundColor: color,
       padding: EdgeInsets.all(12),
-      
     ),
     onPressed: onPress,
 

@@ -31,63 +31,78 @@ class LoginScreen extends StatelessWidget {
               10.heightBox,
               "Log in to $appname".text.fontFamily(bold).white.size(22).make(),
               10.heightBox,
-              Column(
-                    children: [
-                      customTextField(
-                        hint: emailHint,
-                        title: email,
-                        isPass: false,
-                        controller: controller.emailController,
-                      ),
-                      customTextField(
-                        hint: passwordHint,
-                        title: password,
-                        isPass: true,
-                        controller: controller.passwordController,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: forgetpass.text.make(),
-                        ),
-                      ),
-                      5.heightBox,
-                      //pressButton().box.width(context.screenWidth - 50).make(),
-                      pressButton(
-                        color: redColor,
-                        title: login,
-                        textColor: textfieldGrey,
-                        onPress: () async {
-                          await controller.loginMethod(context: context).then((
-                            value,
-                          ) {
-                            if (value != null) {
-                              VxToast.show(context, msg: loginSuccess);
-                              Get.offAll(() => Home());
-                            } else {
-                              VxToast.show(context, msg: loginError);
-                            }
-                          });
-                        },
-                      ).box.width(context.screenWidth - 50).make(),
-                      5.heightBox,
-                      createNewAccount.text.color(fontGrey).make(),
-                      5.heightBox,
-                      pressButton(
-                        color: redColor,
-                        title: signup,
-                        textColor: textfieldGrey,
-                        onPress: () {
-                          Get.to(() => SinupScreen());
-                        },
-                      ).box.width(context.screenWidth - 40).make(),
-                    ],
-                  ).box.white.rounded
-                  .padding(EdgeInsets.all(16))
-                  .width(context.screenWidth - 40)
-                  .shadowSm
-                  .make(),
+              Obx(
+                () =>
+                    Column(
+                          children: [
+                            customTextField(
+                              hint: emailHint,
+                              title: email,
+                              isPass: false,
+                              controller: controller.emailController,
+                            ),
+                            customTextField(
+                              hint: passwordHint,
+                              title: password,
+                              isPass: true,
+                              controller: controller.passwordController,
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {},
+                                child: forgetpass.text.make(),
+                              ),
+                            ),
+                            5.heightBox,
+                            //pressButton().box.width(context.screenWidth - 50).make(),
+                            controller.isloading.value
+                                ? CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(redColor),
+                                )
+                                : pressButton(
+                                  color: redColor,
+                                  title: login,
+                                  textColor: textfieldGrey,
+                                  onPress: () async {
+                                    controller.isloading(true);
+                                    await controller
+                                        .loginMethod(context: context)
+                                        .then((value) {
+                                          if (value != null) {
+                                            VxToast.show(
+                                              context,
+                                              msg: loginSuccess,
+                                            );
+                                            Get.offAll(() => Home());
+                                          } else {
+                                            controller.isloading(false);
+                                            VxToast.show(
+                                              context,
+                                              msg: loginError,
+                                            );
+                                          }
+                                        });
+                                  },
+                                ).box.width(context.screenWidth - 50).make(),
+                            5.heightBox,
+                            createNewAccount.text.color(fontGrey).make(),
+                            5.heightBox,
+                            pressButton(
+                              color: redColor,
+                              title: signup,
+                              textColor: textfieldGrey,
+                              onPress: () {
+                                Get.to(() => SinupScreen());
+                              },
+                            ).box.width(context.screenWidth - 40).make(),
+                          ],
+                        ).box.white.rounded
+                        .padding(EdgeInsets.all(16))
+                        .width(context.screenWidth - 40)
+                        .shadowSm
+                        .make(),
+              ),
 
               10.heightBox,
               loginwith.text.color(fontGrey).make(),

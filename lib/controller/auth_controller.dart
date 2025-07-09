@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
+  var isloading = false.obs;
   //text controller
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -25,7 +26,7 @@ class AuthController extends GetxController {
   Future<UserCredential?> signupMethod({email, password, context}) async {
     UserCredential? userCredential;
     try {
-      await auth.createUserWithEmailAndPassword(
+      userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -46,6 +47,10 @@ class AuthController extends GetxController {
           'password': password,
           'email': email,
           'imageUrl': '',
+          'id': currentUser!.uid,
+          'cart_count': "00",
+          'order_count': "00",
+          'wishlist_count': "00",
         })
         .catchError((error) {
           VxToast.show(Get.context!, msg: error.toString());
